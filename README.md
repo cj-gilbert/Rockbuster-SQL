@@ -35,3 +35,8 @@ http://www.postgresqltutorial.com/wp-content/uploads/2019/05/dvdrental.zip
 
 •	**Reporting results:** customized the form of the reports to fit the audience.  For example, executives received from me a PowerPoint with answers to key questions and a Tableau dashboard that would allow them to further explore the data.  In addition to having access to those reports, other analysts in the data department could access my data dictionary and documentation about queries (and the results of the queries) in an Excel workbook.
 
+### RELATED LINKS
+Tableau Dashboard:
+https://public.tableau.com/app/profile/cj.gilbert/viz/RockbusterInsightsintoCustomersFilmsRevenue/Rockbuster?publish=yes 
+
+
