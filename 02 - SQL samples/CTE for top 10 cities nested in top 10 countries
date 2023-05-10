@@ -1,0 +1,36 @@
+/* This code uses nested common table expressions (CTE) to select the top 10 cities from the cities 
+located within the top 10 countries based on number of Rockbuster customers */
+
+WITH
+  top_10_countries (number_of_customers, country, country_id) AS
+  (
+    SELECT
+        COUNT(customer.customer_id) AS number_of_customers,
+        country,
+        country.country_id
+    FROM customer
+    INNER JOIN address ON customer.address_id = address.address_id
+    INNER JOIN city ON address.city_id = city.city_id
+    INNER JOIN country ON city.country_id = country.country_id
+    GROUP BY country, country.country_id
+    ORDER BY number_of_customers DESC
+    LIMIT 10
+  ),
+  top_10_cities (number_of_customers, country, city, city_id) AS
+  (
+    SELECT
+        COUNT(customer.customer_id) AS Number_of_customers,
+        country,
+        city,
+        city.city_id
+    FROM customer
+    INNER JOIN address ON customer.address_id = address.address_id
+    INNER JOIN city ON address.city_id = city.city_id
+    INNER JOIN top_10_countries ON city.country_id = top_10_countries.country_id
+    GROUP BY country, city, city.city_id
+    ORDER BY Number_of_customers DESC
+    LIMIT 10
+  )
+  
+SELECT *
+FROM top_10_cities;
