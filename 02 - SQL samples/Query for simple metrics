@@ -1,0 +1,12 @@
+/* Code written to respond to this request: "Give us updated numbers for these worldwide metrics: 
+number of customers, number of rentals, average rentals per customer, average payment per rental, 
+and average payment per customer."  Results of the code can be seen within the 
+Excel file "Rockbuster_Sample_Queries_and_Results.xlsx"  */
+
+SELECT
+    COUNT(DISTINCT customer_id) AS Number_of_customers,
+    COUNT(DISTINCT rental_id) AS Number_of_rentals,
+    (COUNT(DISTINCT rental_id))/(COUNT(DISTINCT customer_id)) AS Avg_number_of_rentals,
+    AVG(amount) AS Avg_payment_per_rental,
+    SUM(amount)/(COUNT(DISTINCT customer_id)) AS Avg_payment_per_customer
+FROM Payment;
