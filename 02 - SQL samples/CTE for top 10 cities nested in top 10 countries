@@ -1,5 +1,6 @@
 /* This code uses nested common table expressions (CTE) to select the top 10 cities from the cities 
-located within the top 10 countries based on number of Rockbuster customers */
+located within the top 10 countries based on number of Rockbuster customers. Results of the code can be seen within the 
+Excel file "Rockbuster_Sample_Queries_and_Results.xlsx" */
 
 WITH
   top_10_countries (number_of_customers, country, country_id) AS
