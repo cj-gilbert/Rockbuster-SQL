@@ -1,5 +1,6 @@
 /* This code creates a common table expression (CTE) that selects the top 10 countries
-based on number of Rockbuster customers */
+based on number of Rockbuster customers.  Results of the code can be seen within the 
+Excel file "Rockbuster_Sample_Queries_and_Results.xlsx" */
 
 WITH top_10_countries (number_of_customers, country, country_id) AS
   (
