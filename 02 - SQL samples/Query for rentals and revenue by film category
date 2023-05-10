@@ -1,0 +1,22 @@
+/* Code written to respond to this request: "We'd like to be able to explore in Tableau 
+the number of rentals and revenue earned occuring by film and category."  
+Results of the code can be seen within the Excel file "Rockbuster_Sample_Queries_and_Results.xlsx"
+The Tableau file can found online at: 
+https://public.tableau.com/app/profile/cj.gilbert/viz/RockbusterInsightsintoCustomersFilmsRevenue/Rockbuster?publish=yes 
+*/
+
+SELECT
+    title,
+    COUNT(DISTINCT rental.rental_id) AS number_of_times_rented,
+    AVG(rental_duration) AS avg_rental_duration,
+    AVG(amount) AS avg_rental_payment,
+    SUM(amount) AS total_revenue,
+    category.name AS category_name
+FROM payment
+INNER JOIN rental ON payment.rental_id = rental.rental_id
+INNER JOIN inventory ON rental.inventory_id = inventory.inventory_id
+INNER JOIN film ON inventory.film_id = film.film_id
+INNER JOIN film_category ON film.film_id = film_category.film_id
+INNER JOIN category ON film_category.category_id = category.category_id
+GROUP BY title, category.name
+ORDER by title;
