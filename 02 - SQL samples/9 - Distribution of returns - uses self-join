@@ -1,0 +1,29 @@
+/* Code written to calculate the number and percent of films returned each day relative to
+the duedate (+/- a week).  Results of the code can be seen within the Excel file:
+"Rockbuster_Sample_Queries_and_Results.xlsx" */
+
+SELECT				
+	day_data.days_early,			
+	day_data.day_total,			
+	CAST(day_data.day_total AS FLOAT)/t.total_returns AS percent			
+-- Subquery calculates the number of films for each number of days before/after the duedate				
+FROM (				
+	SELECT			
+		days_early,		
+		COUNT(days_early) as day_total		
+	FROM			
+		returns_log		
+	GROUP BY			
+		days_early		
+	ORDER BY			
+		days_early		
+	) AS day_data			
+-- Self-join subquery creates a column with the total number of returns to use to later calculate percents for subgroupings				
+JOIN (				
+	SELECT			
+		COUNT(*) AS total_returns		
+	FROM 			
+		returns_log		
+	) AS t			
+	ON 1=1;			
+
