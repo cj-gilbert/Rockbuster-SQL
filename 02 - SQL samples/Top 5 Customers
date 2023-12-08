@@ -1,0 +1,64 @@
+/* This code uses common table expressions (CTE) to select the top 10 countries based on number of Rockbuster customers,
+and then the top 10 cities from within those countries.  The main query selects the top 5 customers within that list of
+10 cities based on the amount spent.  Results of the code can be seen within the Excel file: 
+"Rockbuster_Sample_Queries_and_Results.xlsx" */
+
+WITH 				
+-- This CTE identfies the top 10 countries based on total number of customers				
+	top_10_countries (number_of_customers, country, country_id) AS			
+	(   			
+	SELECT			
+		COUNT(customer.customer_id) AS number_of_customers,		
+		country,		
+		country.country_id		
+	FROM customer			
+		LEFT JOIN address		
+			ON customer.address_id = address.address_id	
+		LEFT JOIN city 		
+			ON address.city_id = city.city_id	
+		LEFT JOIN country 		
+			ON city.country_id = country.country_id	
+	GROUP BY country, country.country_id			
+	ORDER BY number_of_customers DESC			
+	LIMIT 10			
+	),			
+				
+-- This CTE identfies the top 10 cities (based on number of clients) located within the top 10 countries				
+	 top_10_cities (number_of_customers, country, city, city_id) AS			
+	(   			
+		SELECT		
+			COUNT(customer.customer_id) AS Number_of_customers,	
+			country,	
+			city,	
+			city.city_id	
+		FROM customer		
+			LEFT JOIN address 	
+				ON customer.address_id = address.address_id
+			LEFT JOIN city 	
+				ON address.city_id = city.city_id
+		-- Use an inner join at this step so as to exclude any cities not in the top 10 country list		
+			INNER JOIN top_10_countries	
+				 ON city.country_id = top_10_countries.country_id
+		GROUP BY country, city, city.city_id		
+		ORDER BY Number_of_customers DESC		
+		LIMIT 10		
+	)			
+				
+SELECT				
+	SUM(amount) AS total_payments,			
+	payment.customer_id,			
+	first_name,			
+	last_name,			
+	country,			
+	city			
+FROM payment				
+	LEFT JOIN customer			
+		ON payment.customer_id = customer.customer_id		
+	LEFT JOIN address			
+		ON customer.address_id = address.address_id		
+	-- Use an inner join at this step so as to exclude any customers not in the top 10 city list			
+	INNER JOIN top_10_cities 			
+		ON address.city_id = top_10_cities.city_id		
+GROUP BY country, city, payment.customer_id, last_name, first_name				
+ORDER BY total_payments DESC				
+LIMIT 5;				
