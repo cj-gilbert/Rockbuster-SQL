@@ -1,0 +1,13 @@
+/* Simple query to calculate basic stats for films returned early. 
+Results of the code can be seen within the Excel file:
+"Rockbuster_Sample_Queries_and_Results.xlsx"
+*/
+
+SELECT			
+	COUNT(*) AS total_early_rentals,		
+	AVG(days_early) AS average_days_early,		
+	STDDEV(days_early) AS st_dev_days_early,		
+	MAX(days_early) AS earlies_number_of_days_returned		
+FROM			
+	returns_log		
+WHERE days_early > 0;			
