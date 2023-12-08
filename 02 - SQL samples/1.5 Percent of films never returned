@@ -1,0 +1,21 @@
+/* Simple query to percent of films never rturned
+Results of the code can be seen within the Excel file:
+"Rockbuster_Sample_Queries_and_Results.xlsx"
+*/
+
+SELECT				
+	TO_CHAR(			
+		CAST(		
+			-- Count lost films as decimal to later allow formatting as percent	
+			(SELECT 	
+				COUNT(*) AS Lost_films
+			FROM rental	
+			WHERE return_date IS NULL	
+			)	
+		AS FLOAT		
+		)		
+		/ COUNT(*) 		
+	, 'fm00D00%'			
+	)			
+	AS Percent_films_lost			
+FROM rental;				
