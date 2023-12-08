@@ -1,0 +1,37 @@
+/* Code written to create a VIEW that allows multiple queries access aggregated data about movies
+that have been returned early or late.  Results of the code can be seen within the Excel file:
+"Rockbuster_Sample_Queries_and_Results.xlsx" */
+
+CREATE VIEW returns_log AS								
+	SELECT							
+		rental_id,						
+		rental_date,						
+		return_date,						
+		actual_rental_duration,						
+		expected_rental_duration,						
+		expected_rental_duration - EXTRACT(day FROM actual_rental_duration) AS days_early,						
+		--Adding a flag for each rental as to whether it is early, late, or on time.						
+		CASE 	WHEN expected_rental_duration - EXTRACT(day FROM actual_rental_duration)= 0  					
+					THEN 'On Time'			
+				WHEN expected_rental_duration - EXTRACT(day FROM actual_rental_duration) < 0				
+					THEN 'Late'			
+				ELSE 'Early'				
+			END AS return_status					
+	FROM							
+		--Subquery calculates actual rental duration and pulls only necessary fields						
+		(						
+		SELECT 						
+			rental_id,					
+			rental_date,					
+			return_date,					
+			rental_duration AS expected_rental_duration,					
+			return_date - rental_date AS actual_rental_duration   -- returns interval datatype					
+		FROM rental						
+			LEFT JOIN inventory					
+				ON rental.inventory_id = inventory.inventory_id				
+			LEFT JOIN film					
+				ON inventory.film_id = film.film_id				
+		--Excluding films that were never returned						
+		WHERE return_date IS NOT NULL						
+		) AS returns_data						
+		;						
