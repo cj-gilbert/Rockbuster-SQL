@@ -1,0 +1,25 @@
+/* Code written to calculate the number and percent of films returned early,
+late, or on time.  Results of the code can be seen within the Excel file:
+"Rockbuster_Sample_Queries_and_Results.xlsx" */
+
+SELECT					
+	r.return_status,				
+	r.total_films,				
+	CAST(r.total_films AS FLOAT)/t.total_returns AS percent				
+					
+FROM (					
+-- Subquery calculates the number of films returned early, late, or on time.					
+	SELECT				
+		return_status,			
+		COUNT(*) AS total_films			
+	FROM returns_log 				
+	GROUP BY return_status				
+	) AS r				
+					
+JOIN (					
+-- Self-join subquery creates a column with the total number of returns to use to later calculate percents for subgroupings					
+	SELECT				
+		COUNT(*) AS total_returns			
+	FROM returns_log				
+	) AS t				
+	ON 1=1;				
